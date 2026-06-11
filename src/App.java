@@ -186,7 +186,7 @@ public class App {
             opcao = Leitura.lerInteiro(leitor, "Escolha uma opcao: ");
 
             if (opcao == 1) {
-                totalOrdensServico = OrdensServico.abrirOrdemServico(
+                totalOrdensServico = Cadastros.abrirOrdemServico(
                     leitor,
                     ordensServico,
                     totalOrdensServico,
@@ -198,7 +198,7 @@ public class App {
                     totalPecas
                 );
             } else if (opcao == 2) {
-                OrdensServico.listarOrdensServico(
+                Cadastros.listarOrdensServico(
                     ordensServico,
                     totalOrdensServico,
                     mecanicos,

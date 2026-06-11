@@ -21,7 +21,6 @@ AutoCenterRota381/
 |   |-- App.java
 |   |-- Cadastros.java
 |   |-- Leitura.java
-|   |-- OrdensServico.java
 |   |-- Mecanico.java
 |   |-- Veiculo.java
 |   |-- Peca.java
