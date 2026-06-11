@@ -4,6 +4,7 @@ public class App {
     public static final int LIMITE_MECANICOS = 50;
     public static final int LIMITE_VEICULOS = 100;
     public static final int LIMITE_PECAS = 100;
+    public static final int LIMITE_ORDENS_SERVICO = 200;
 
     public static void main(String[] args) {
         Scanner leitor = new Scanner(System.in);
@@ -11,10 +12,12 @@ public class App {
         Mecanico[] mecanicos = new Mecanico[LIMITE_MECANICOS];
         Veiculo[] veiculos = new Veiculo[LIMITE_VEICULOS];
         Peca[] pecas = new Peca[LIMITE_PECAS];
+        OrdemServico[] ordensServico = new OrdemServico[LIMITE_ORDENS_SERVICO];
 
         int totalMecanicos = 0;
         int totalVeiculos = 0;
         int totalPecas = 0;
+        int totalOrdensServico = 0;
         int opcaoPrincipal;
 
         do {
@@ -39,6 +42,18 @@ public class App {
                     pecas,
                     totalPecas
                 );
+            } else if (opcaoPrincipal == 4) {
+                totalOrdensServico = executarMenuOrdensServico(
+                    leitor,
+                    ordensServico,
+                    totalOrdensServico,
+                    mecanicos,
+                    totalMecanicos,
+                    veiculos,
+                    totalVeiculos,
+                    pecas,
+                    totalPecas
+                );
             } else if (opcaoPrincipal != 0) {
                 System.out.println("Opcao invalida.");
             }
@@ -55,6 +70,7 @@ public class App {
         System.out.println("1 - Mecanicos");
         System.out.println("2 - Clientes e veiculos");
         System.out.println("3 - Estoque de pecas");
+        System.out.println("4 - Ordens de servico");
         System.out.println("0 - Sair");
         System.out.println("====================================");
     }
@@ -147,5 +163,56 @@ public class App {
         } while (opcao != 0);
 
         return totalPecas;
+    }
+
+    public static int executarMenuOrdensServico(
+        Scanner leitor,
+        OrdemServico[] ordensServico,
+        int totalOrdensServico,
+        Mecanico[] mecanicos,
+        int totalMecanicos,
+        Veiculo[] veiculos,
+        int totalVeiculos,
+        Peca[] pecas,
+        int totalPecas
+    ) {
+        int opcao;
+
+        do {
+            System.out.println("\n--- MENU DE ORDENS DE SERVICO ---");
+            System.out.println("1 - Abrir ordem de servico");
+            System.out.println("2 - Listar ordens de servico");
+            System.out.println("0 - Voltar");
+            opcao = Leitura.lerInteiro(leitor, "Escolha uma opcao: ");
+
+            if (opcao == 1) {
+                totalOrdensServico = OrdensServico.abrirOrdemServico(
+                    leitor,
+                    ordensServico,
+                    totalOrdensServico,
+                    mecanicos,
+                    totalMecanicos,
+                    veiculos,
+                    totalVeiculos,
+                    pecas,
+                    totalPecas
+                );
+            } else if (opcao == 2) {
+                OrdensServico.listarOrdensServico(
+                    ordensServico,
+                    totalOrdensServico,
+                    mecanicos,
+                    totalMecanicos,
+                    veiculos,
+                    totalVeiculos,
+                    pecas,
+                    totalPecas
+                );
+            } else if (opcao != 0) {
+                System.out.println("Opcao invalida.");
+            }
+        } while (opcao != 0);
+
+        return totalOrdensServico;
     }
 }

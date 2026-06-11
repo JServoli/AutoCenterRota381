@@ -11,7 +11,7 @@ Modularizacao.
 - Metodos estaticos organizados em modulos.
 - Classes de dados somente com atributos publicos.
 - Sem `ArrayList`, `List`, banco de dados, heranca ou frameworks.
-- Importacao explicita apenas do `Scanner` nesta primeira etapa.
+- Importacao explicita apenas do `Scanner` nos encontros concluidos.
 
 ## Estrutura do projeto
 
@@ -21,6 +21,7 @@ AutoCenterRota381/
 |   |-- App.java
 |   |-- Cadastros.java
 |   |-- Leitura.java
+|   |-- OrdensServico.java
 |   |-- Mecanico.java
 |   |-- Veiculo.java
 |   |-- Peca.java
@@ -44,12 +45,25 @@ AutoCenterRota381/
 
 ### Encontro 2 - Ordem de servico
 
-- [ ] Cadastrar uma ordem de servico.
-- [ ] Buscar a placa no vetor de veiculos.
-- [ ] Buscar o mecanico pelo codigo.
-- [ ] Buscar a peca pelo codigo.
-- [ ] Validar a quantidade disponivel.
-- [ ] Descontar a quantidade usada do estoque.
+- [x] Cadastrar uma ordem de servico em vetor fixo.
+- [x] Impedir numeros de OS repetidos.
+- [x] Buscar a placa no vetor de veiculos.
+- [x] Buscar o mecanico pelo codigo.
+- [x] Buscar a peca pelo codigo.
+- [x] Validar a quantidade solicitada.
+- [x] Bloquear a OS quando o estoque for insuficiente.
+- [x] Descontar a quantidade usada somente depois de todas as validacoes.
+- [x] Listar as ordens de servico abertas.
+
+#### Regras validadas
+
+- Uma placa nao cadastrada bloqueia a abertura da OS.
+- Um mecanico nao cadastrado bloqueia a abertura da OS.
+- Uma peca nao cadastrada bloqueia a abertura da OS.
+- Quantidade zero, negativa ou maior que o estoque bloqueia a abertura.
+- Mao de obra negativa bloqueia a abertura.
+- Uma OS bloqueada nao altera o estoque.
+- Uma OS aceita e armazenada no vetor desconta a peca imediatamente.
 
 ### Encontro 3 - Persistencia
 
@@ -80,9 +94,9 @@ configurado e o projeto esta publicado no GitHub. O fluxo utilizado segue os
 comandos ensinados em aula:
 
 ```powershell
-git init
 git add .
-git commit -m "Conclui os cadastros base do Encontro 1"
+git commit -m "Implementa a abertura de OS do Encontro 2"
+git push
 ```
 
 ## Diario da IA
@@ -111,3 +125,29 @@ Foram revisadas as validacoes dos cadastros para impedir codigo repetido de
 mecanico, placa repetida de veiculo e codigo repetido de peca. Esta resposta
 sera complementada nos proximos encontros, principalmente durante a validacao
 e o desconto de estoque.
+
+### Encontro 2
+
+**1. Quais ferramentas, metodos ou bibliotecas proibidas a IA tentou incluir?**
+
+Nenhuma. A implementacao foi mantida em vetores fixos, lacos tradicionais,
+metodos `public static` e busca sequencial com `for`. Nao foram usados
+`ArrayList`, `List`, banco de dados, streams ou recursos de orientacao a
+objetos avancada.
+
+**2. Qual prompt foi usado para manter o padrao estruturado?**
+
+Foi solicitado que a abertura da OS utilizasse somente os assuntos presentes
+nos PDFs da disciplina: vetor nativo de tamanho fixo, classes de dados apenas
+com atributos publicos, funcoes estaticas, `Scanner`, condicionais e lacos. O
+prompt tambem exigiu a busca manual da placa, do mecanico e da peca dentro dos
+vetores, sem colecoes dinamicas ou banco de dados.
+
+**3. Qual regra de negocio precisou ser revisada ou debugada manualmente?**
+
+A regra mais delicada foi o desconto da peca no estoque. Durante a revisao
+manual, o grupo garantiu que a subtracao acontecesse somente depois de validar
+todos os dados da OS, inclusive o valor da mao de obra. Foram executados testes
+com placa, mecanico e peca inexistentes, estoque insuficiente e mao de obra
+negativa. Em todos esses casos, a OS foi bloqueada e o estoque permaneceu
+inalterado.
