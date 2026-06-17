@@ -1,4 +1,5 @@
 bin/
 *.class
+*.csv
 .vscode/*
 !.vscode/settings.json

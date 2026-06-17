@@ -11,7 +11,8 @@ Modularizacao.
 - Metodos estaticos organizados em modulos.
 - Classes de dados somente com atributos publicos.
 - Sem `ArrayList`, `List`, banco de dados, heranca ou frameworks.
-- Importacao explicita apenas do `Scanner` nos encontros concluidos.
+- Importacao explicita apenas de `Scanner`, `File`, `FileWriter` e
+  `PrintWriter` nos encontros concluidos.
 
 ## Estrutura do projeto
 
@@ -26,6 +27,10 @@ AutoCenterRota381/
 |   |-- Peca.java
 |   `-- OrdemServico.java
 |-- bin/
+|-- mecanicos.csv
+|-- veiculos.csv
+|-- pecas.csv
+|-- ordens_servico.csv
 |-- .gitignore
 `-- README.md
 ```
@@ -66,16 +71,29 @@ AutoCenterRota381/
 
 ### Encontro 3 - Persistencia
 
-- [ ] Salvar os vetores em arquivos CSV.
-- [ ] Carregar os vetores ao iniciar o sistema.
-- [ ] Confirmar que os dados sobrevivem ao encerramento.
+- [x] Salvar mecanicos em `mecanicos.csv`.
+- [x] Salvar veiculos em `veiculos.csv`.
+- [x] Salvar pecas em `pecas.csv`.
+- [x] Salvar ordens de servico em `ordens_servico.csv`.
+- [x] Carregar todos os vetores ao iniciar o sistema.
+- [x] Salvar todos os vetores ao encerrar o sistema.
+- [x] Confirmar que os dados sobrevivem ao encerramento.
 
 ### Encontro 4 - Relatorios e diferencial
 
-- [ ] Relatorio de mao de obra por mecanico.
-- [ ] Relatorio de pecas com estoque zerado.
-- [ ] Relatorio de faturamento de pecas.
-- [ ] Funcionalidade extra.
+- [x] Relatorio de mao de obra por mecanico.
+- [x] Relatorio de pecas com estoque zerado.
+- [x] Relatorio de faturamento de pecas.
+- [x] Funcionalidade extra: historico de ordens por placa.
+
+#### Relatorios disponiveis
+
+- Comissao da equipe: soma a mao de obra gerada por cada mecanico.
+- Inventario critico: mostra apenas as pecas com quantidade zero.
+- Faturamento de pecas: soma quantidade usada na OS multiplicada pelo preco
+  unitario gravado na propria OS.
+- Historico por placa: diferencial que mostra as OS de um veiculo e o total
+  gasto por ele.
 
 ## Como compilar e executar
 
@@ -94,7 +112,7 @@ comandos ensinados em aula:
 
 ```powershell
 git add .
-git commit -m "Implementa a abertura de OS do Encontro 2"
+git commit -m "Implementa persistencia e relatorios finais"
 git push
 ```
 
@@ -150,3 +168,44 @@ todos os dados da OS, inclusive o valor da mao de obra. Foram executados testes
 com placa, mecanico e peca inexistentes, estoque insuficiente e mao de obra
 negativa. Em todos esses casos, a OS foi bloqueada e o estoque permaneceu
 inalterado.
+
+### Encontro 3
+
+**1. Quais ferramentas, metodos ou bibliotecas proibidas a IA tentou incluir?**
+
+Nenhuma. A persistencia foi feita com arquivos de texto CSV, usando `File`,
+`FileWriter`, `PrintWriter`, `Scanner`, `split(";")`, vetores fixos e lacos
+tradicionais.
+
+**2. Qual prompt foi usado para manter o padrao estruturado?**
+
+Foi solicitado que o sistema salvasse e carregasse todos os vetores em arquivos
+CSV, sem banco de dados, sem `ArrayList`, sem serializacao automatica e sem
+frameworks. Tambem foi pedido que os arquivos fossem lidos para a memoria no
+inicio do programa e gravados novamente ao encerrar.
+
+**3. Qual regra de negocio precisou ser revisada ou debugada manualmente?**
+
+Foi revisado o carregamento das ordens de servico para que cada OS mantenha o
+preco unitario da peca no momento do lancamento. Assim, o relatorio de
+faturamento continua correto mesmo depois que o sistema fecha e abre de novo.
+
+### Encontro 4
+
+**1. Quais ferramentas, metodos ou bibliotecas proibidas a IA tentou incluir?**
+
+Nenhuma. Os relatorios foram implementados com varreduras sequenciais nos
+vetores, comparacoes com `if` e acumuladores numericos.
+
+**2. Qual prompt foi usado para manter o padrao estruturado?**
+
+Foi solicitado que os relatorios fossem feitos apenas com os dados ja carregados
+em memoria, usando vetores fixos e lacos `for`, sem consultas SQL, colecoes
+dinamicas ou bibliotecas externas.
+
+**3. Qual regra de negocio precisou ser revisada ou debugada manualmente?**
+
+A regra principal foi o faturamento de pecas. O grupo verificou que o calculo
+usa `quantidadePeca * precoUnitarioPeca` em cada OS. Tambem foi testado o
+inventario critico com peca zerada e o historico por placa como funcionalidade
+diferencial.

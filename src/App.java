@@ -14,11 +14,13 @@ public class App {
         Peca[] pecas = new Peca[LIMITE_PECAS];
         OrdemServico[] ordensServico = new OrdemServico[LIMITE_ORDENS_SERVICO];
 
-        int totalMecanicos = 0;
-        int totalVeiculos = 0;
-        int totalPecas = 0;
-        int totalOrdensServico = 0;
+        int totalMecanicos = Cadastros.carregarMecanicos(mecanicos);
+        int totalVeiculos = Cadastros.carregarVeiculos(veiculos);
+        int totalPecas = Cadastros.carregarPecas(pecas);
+        int totalOrdensServico = Cadastros.carregarOrdensServico(ordensServico);
         int opcaoPrincipal;
+
+        System.out.println("Dados carregados dos arquivos CSV.");
 
         do {
             exibirMenuPrincipal();
@@ -54,12 +56,30 @@ public class App {
                     pecas,
                     totalPecas
                 );
+            } else if (opcaoPrincipal == 5) {
+                executarMenuRelatorios(
+                    leitor,
+                    mecanicos,
+                    totalMecanicos,
+                    veiculos,
+                    totalVeiculos,
+                    pecas,
+                    totalPecas,
+                    ordensServico,
+                    totalOrdensServico
+                );
             } else if (opcaoPrincipal != 0) {
                 System.out.println("Opcao invalida.");
             }
         } while (opcaoPrincipal != 0);
 
+        Cadastros.salvarMecanicos(mecanicos, totalMecanicos);
+        Cadastros.salvarVeiculos(veiculos, totalVeiculos);
+        Cadastros.salvarPecas(pecas, totalPecas);
+        Cadastros.salvarOrdensServico(ordensServico, totalOrdensServico);
+
         leitor.close();
+        System.out.println("\nDados salvos nos arquivos CSV.");
         System.out.println("\nSistema encerrado.");
     }
 
@@ -71,6 +91,7 @@ public class App {
         System.out.println("2 - Clientes e veiculos");
         System.out.println("3 - Estoque de pecas");
         System.out.println("4 - Ordens de servico");
+        System.out.println("5 - Relatorios");
         System.out.println("0 - Sair");
         System.out.println("====================================");
     }
@@ -214,5 +235,59 @@ public class App {
         } while (opcao != 0);
 
         return totalOrdensServico;
+    }
+
+    public static void executarMenuRelatorios(
+        Scanner leitor,
+        Mecanico[] mecanicos,
+        int totalMecanicos,
+        Veiculo[] veiculos,
+        int totalVeiculos,
+        Peca[] pecas,
+        int totalPecas,
+        OrdemServico[] ordensServico,
+        int totalOrdensServico
+    ) {
+        int opcao;
+
+        do {
+            System.out.println("\n--- MENU DE RELATORIOS ---");
+            System.out.println("1 - Comissao da equipe");
+            System.out.println("2 - Inventario critico");
+            System.out.println("3 - Faturamento de pecas");
+            System.out.println("4 - Diferencial: historico por placa");
+            System.out.println("0 - Voltar");
+            opcao = Leitura.lerInteiro(leitor, "Escolha uma opcao: ");
+
+            if (opcao == 1) {
+                Cadastros.relatorioComissaoEquipe(
+                    mecanicos,
+                    totalMecanicos,
+                    ordensServico,
+                    totalOrdensServico
+                );
+            } else if (opcao == 2) {
+                Cadastros.relatorioInventarioCritico(pecas, totalPecas);
+            } else if (opcao == 3) {
+                Cadastros.relatorioFaturamentoPecas(
+                    pecas,
+                    totalPecas,
+                    ordensServico,
+                    totalOrdensServico
+                );
+            } else if (opcao == 4) {
+                Cadastros.relatorioHistoricoPorPlaca(
+                    leitor,
+                    veiculos,
+                    totalVeiculos,
+                    pecas,
+                    totalPecas,
+                    ordensServico,
+                    totalOrdensServico
+                );
+            } else if (opcao != 0) {
+                System.out.println("Opcao invalida.");
+            }
+        } while (opcao != 0);
     }
 }

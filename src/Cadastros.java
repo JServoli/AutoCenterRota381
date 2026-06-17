@@ -1,6 +1,14 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 public class Cadastros {
+    public static final String ARQUIVO_MECANICOS = "mecanicos.csv";
+    public static final String ARQUIVO_VEICULOS = "veiculos.csv";
+    public static final String ARQUIVO_PECAS = "pecas.csv";
+    public static final String ARQUIVO_ORDENS = "ordens_servico.csv";
+
     public static int cadastrarMecanico(
         Scanner leitor,
         Mecanico[] mecanicos,
@@ -335,6 +343,7 @@ public class Cadastros {
         novaOrdem.codigoMecanico = mecanicos[posicaoMecanico].codigo;
         novaOrdem.codigoPeca = pecas[posicaoPeca].codigo;
         novaOrdem.quantidadePeca = quantidadePeca;
+        novaOrdem.precoUnitarioPeca = pecas[posicaoPeca].precoUnitario;
         novaOrdem.valorMaoDeObra = valorMaoDeObra;
 
         ordensServico[totalOrdensServico] = novaOrdem;
@@ -411,9 +420,417 @@ public class Cadastros {
                 + " | Quantidade usada: " + ordensServico[i].quantidadePeca
             );
             System.out.printf(
+                "Valor em pecas: R$ %.2f%n",
+                calcularValorPecasDaOrdem(ordensServico[i])
+            );
+            System.out.printf(
                 "Mao de obra: R$ %.2f%n",
                 ordensServico[i].valorMaoDeObra
             );
         }
+    }
+
+    public static double calcularValorPecasDaOrdem(OrdemServico ordem) {
+        return ordem.quantidadePeca * ordem.precoUnitarioPeca;
+    }
+
+    public static void salvarMecanicos(
+        Mecanico[] mecanicos,
+        int totalMecanicos
+    ) {
+        try {
+            FileWriter arquivo = new FileWriter(ARQUIVO_MECANICOS);
+            PrintWriter gravador = new PrintWriter(arquivo);
+
+            for (int i = 0; i < totalMecanicos; i++) {
+                gravador.println(
+                    mecanicos[i].codigo + ";"
+                    + prepararCampo(mecanicos[i].nome) + ";"
+                    + prepararCampo(mecanicos[i].especialidade)
+                );
+            }
+
+            gravador.close();
+        } catch (Exception e) {
+            System.out.println("Erro ao salvar mecanicos: " + e.getMessage());
+        }
+    }
+
+    public static int carregarMecanicos(Mecanico[] mecanicos) {
+        int total = 0;
+
+        try {
+            File arquivo = new File(ARQUIVO_MECANICOS);
+
+            if (!arquivo.exists()) {
+                return 0;
+            }
+
+            Scanner leitor = new Scanner(arquivo);
+
+            while (leitor.hasNextLine() && total < mecanicos.length) {
+                String linha = leitor.nextLine();
+                String[] dados = linha.split(";");
+
+                if (dados.length >= 3) {
+                    Mecanico mecanico = new Mecanico();
+                    mecanico.codigo = Integer.parseInt(dados[0]);
+                    mecanico.nome = dados[1];
+                    mecanico.especialidade = dados[2];
+                    mecanicos[total] = mecanico;
+                    total++;
+                }
+            }
+
+            leitor.close();
+        } catch (Exception e) {
+            System.out.println("Erro ao carregar mecanicos: " + e.getMessage());
+        }
+
+        return total;
+    }
+
+    public static void salvarVeiculos(Veiculo[] veiculos, int totalVeiculos) {
+        try {
+            FileWriter arquivo = new FileWriter(ARQUIVO_VEICULOS);
+            PrintWriter gravador = new PrintWriter(arquivo);
+
+            for (int i = 0; i < totalVeiculos; i++) {
+                gravador.println(
+                    prepararCampo(veiculos[i].placa) + ";"
+                    + prepararCampo(veiculos[i].nomeDono) + ";"
+                    + prepararCampo(veiculos[i].modelo)
+                );
+            }
+
+            gravador.close();
+        } catch (Exception e) {
+            System.out.println("Erro ao salvar veiculos: " + e.getMessage());
+        }
+    }
+
+    public static int carregarVeiculos(Veiculo[] veiculos) {
+        int total = 0;
+
+        try {
+            File arquivo = new File(ARQUIVO_VEICULOS);
+
+            if (!arquivo.exists()) {
+                return 0;
+            }
+
+            Scanner leitor = new Scanner(arquivo);
+
+            while (leitor.hasNextLine() && total < veiculos.length) {
+                String linha = leitor.nextLine();
+                String[] dados = linha.split(";");
+
+                if (dados.length >= 3) {
+                    Veiculo veiculo = new Veiculo();
+                    veiculo.placa = dados[0];
+                    veiculo.nomeDono = dados[1];
+                    veiculo.modelo = dados[2];
+                    veiculos[total] = veiculo;
+                    total++;
+                }
+            }
+
+            leitor.close();
+        } catch (Exception e) {
+            System.out.println("Erro ao carregar veiculos: " + e.getMessage());
+        }
+
+        return total;
+    }
+
+    public static void salvarPecas(Peca[] pecas, int totalPecas) {
+        try {
+            FileWriter arquivo = new FileWriter(ARQUIVO_PECAS);
+            PrintWriter gravador = new PrintWriter(arquivo);
+
+            for (int i = 0; i < totalPecas; i++) {
+                gravador.println(
+                    pecas[i].codigo + ";"
+                    + prepararCampo(pecas[i].descricao) + ";"
+                    + pecas[i].quantidadeEstoque + ";"
+                    + pecas[i].precoUnitario
+                );
+            }
+
+            gravador.close();
+        } catch (Exception e) {
+            System.out.println("Erro ao salvar pecas: " + e.getMessage());
+        }
+    }
+
+    public static int carregarPecas(Peca[] pecas) {
+        int total = 0;
+
+        try {
+            File arquivo = new File(ARQUIVO_PECAS);
+
+            if (!arquivo.exists()) {
+                return 0;
+            }
+
+            Scanner leitor = new Scanner(arquivo);
+
+            while (leitor.hasNextLine() && total < pecas.length) {
+                String linha = leitor.nextLine();
+                String[] dados = linha.split(";");
+
+                if (dados.length >= 4) {
+                    Peca peca = new Peca();
+                    peca.codigo = Integer.parseInt(dados[0]);
+                    peca.descricao = dados[1];
+                    peca.quantidadeEstoque = Integer.parseInt(dados[2]);
+                    peca.precoUnitario = Double.parseDouble(dados[3]);
+                    pecas[total] = peca;
+                    total++;
+                }
+            }
+
+            leitor.close();
+        } catch (Exception e) {
+            System.out.println("Erro ao carregar pecas: " + e.getMessage());
+        }
+
+        return total;
+    }
+
+    public static void salvarOrdensServico(
+        OrdemServico[] ordensServico,
+        int totalOrdensServico
+    ) {
+        try {
+            FileWriter arquivo = new FileWriter(ARQUIVO_ORDENS);
+            PrintWriter gravador = new PrintWriter(arquivo);
+
+            for (int i = 0; i < totalOrdensServico; i++) {
+                gravador.println(
+                    ordensServico[i].numero + ";"
+                    + prepararCampo(ordensServico[i].placaVeiculo) + ";"
+                    + ordensServico[i].codigoMecanico + ";"
+                    + ordensServico[i].codigoPeca + ";"
+                    + ordensServico[i].quantidadePeca + ";"
+                    + ordensServico[i].precoUnitarioPeca + ";"
+                    + ordensServico[i].valorMaoDeObra
+                );
+            }
+
+            gravador.close();
+        } catch (Exception e) {
+            System.out.println("Erro ao salvar ordens: " + e.getMessage());
+        }
+    }
+
+    public static int carregarOrdensServico(OrdemServico[] ordensServico) {
+        int total = 0;
+
+        try {
+            File arquivo = new File(ARQUIVO_ORDENS);
+
+            if (!arquivo.exists()) {
+                return 0;
+            }
+
+            Scanner leitor = new Scanner(arquivo);
+
+            while (leitor.hasNextLine() && total < ordensServico.length) {
+                String linha = leitor.nextLine();
+                String[] dados = linha.split(";");
+
+                if (dados.length >= 7) {
+                    OrdemServico ordem = new OrdemServico();
+                    ordem.numero = Integer.parseInt(dados[0]);
+                    ordem.placaVeiculo = dados[1];
+                    ordem.codigoMecanico = Integer.parseInt(dados[2]);
+                    ordem.codigoPeca = Integer.parseInt(dados[3]);
+                    ordem.quantidadePeca = Integer.parseInt(dados[4]);
+                    ordem.precoUnitarioPeca = Double.parseDouble(dados[5]);
+                    ordem.valorMaoDeObra = Double.parseDouble(dados[6]);
+                    ordensServico[total] = ordem;
+                    total++;
+                } else if (dados.length >= 6) {
+                    OrdemServico ordem = new OrdemServico();
+                    ordem.numero = Integer.parseInt(dados[0]);
+                    ordem.placaVeiculo = dados[1];
+                    ordem.codigoMecanico = Integer.parseInt(dados[2]);
+                    ordem.codigoPeca = Integer.parseInt(dados[3]);
+                    ordem.quantidadePeca = Integer.parseInt(dados[4]);
+                    ordem.precoUnitarioPeca = 0;
+                    ordem.valorMaoDeObra = Double.parseDouble(dados[5]);
+                    ordensServico[total] = ordem;
+                    total++;
+                }
+            }
+
+            leitor.close();
+        } catch (Exception e) {
+            System.out.println("Erro ao carregar ordens: " + e.getMessage());
+        }
+
+        return total;
+    }
+
+    public static void relatorioComissaoEquipe(
+        Mecanico[] mecanicos,
+        int totalMecanicos,
+        OrdemServico[] ordensServico,
+        int totalOrdensServico
+    ) {
+        System.out.println("\n--- COMISSAO DA EQUIPE ---");
+
+        if (totalMecanicos == 0) {
+            System.out.println("Nenhum mecanico cadastrado.");
+            return;
+        }
+
+        for (int i = 0; i < totalMecanicos; i++) {
+            double totalMaoDeObra = 0;
+
+            for (int j = 0; j < totalOrdensServico; j++) {
+                if (ordensServico[j].codigoMecanico == mecanicos[i].codigo) {
+                    totalMaoDeObra =
+                        totalMaoDeObra + ordensServico[j].valorMaoDeObra;
+                }
+            }
+
+            System.out.printf(
+                "Mecanico: %s | Total em mao de obra: R$ %.2f%n",
+                mecanicos[i].nome,
+                totalMaoDeObra
+            );
+        }
+    }
+
+    public static void relatorioInventarioCritico(Peca[] pecas, int totalPecas) {
+        boolean encontrou = false;
+
+        System.out.println("\n--- INVENTARIO CRITICO ---");
+
+        for (int i = 0; i < totalPecas; i++) {
+            if (pecas[i].quantidadeEstoque == 0) {
+                System.out.println(
+                    "Codigo: " + pecas[i].codigo
+                    + " | Descricao: " + pecas[i].descricao
+                    + " | Estoque: " + pecas[i].quantidadeEstoque
+                );
+                encontrou = true;
+            }
+        }
+
+        if (!encontrou) {
+            System.out.println("Nenhuma peca com estoque zero.");
+        }
+    }
+
+    public static void relatorioFaturamentoPecas(
+        Peca[] pecas,
+        int totalPecas,
+        OrdemServico[] ordensServico,
+        int totalOrdensServico
+    ) {
+        double totalFaturado = 0;
+
+        System.out.println("\n--- FATURAMENTO DE PECAS ---");
+
+        if (totalOrdensServico == 0) {
+            System.out.println("Nenhuma ordem de servico cadastrada.");
+            return;
+        }
+
+        for (int i = 0; i < totalOrdensServico; i++) {
+            double valorPecas = calcularValorPecasDaOrdem(ordensServico[i]);
+            int posicaoPeca = buscarPecaPorCodigo(
+                pecas,
+                totalPecas,
+                ordensServico[i].codigoPeca
+            );
+            String descricao = "Peca nao encontrada";
+
+            if (posicaoPeca != -1) {
+                descricao = pecas[posicaoPeca].descricao;
+            }
+
+            System.out.printf(
+                "OS %d | Peca: %s | Quantidade: %d | Valor: R$ %.2f%n",
+                ordensServico[i].numero,
+                descricao,
+                ordensServico[i].quantidadePeca,
+                valorPecas
+            );
+
+            totalFaturado = totalFaturado + valorPecas;
+        }
+
+        System.out.printf("Total faturado com pecas: R$ %.2f%n", totalFaturado);
+    }
+
+    public static void relatorioHistoricoPorPlaca(
+        Scanner leitor,
+        Veiculo[] veiculos,
+        int totalVeiculos,
+        Peca[] pecas,
+        int totalPecas,
+        OrdemServico[] ordensServico,
+        int totalOrdensServico
+    ) {
+        String placa = Leitura.lerTexto(leitor, "Informe a placa: ");
+        int posicaoVeiculo = buscarVeiculoPorPlaca(veiculos, totalVeiculos, placa);
+        boolean encontrou = false;
+        double totalGeral = 0;
+
+        System.out.println("\n--- HISTORICO POR PLACA ---");
+
+        if (posicaoVeiculo == -1) {
+            System.out.println("Veiculo nao cadastrado.");
+            return;
+        }
+
+        System.out.println(
+            "Veiculo: " + veiculos[posicaoVeiculo].placa
+            + " | Dono: " + veiculos[posicaoVeiculo].nomeDono
+            + " | Modelo: " + veiculos[posicaoVeiculo].modelo
+        );
+
+        for (int i = 0; i < totalOrdensServico; i++) {
+            if (ordensServico[i].placaVeiculo.equalsIgnoreCase(placa)) {
+                int posicaoPeca = buscarPecaPorCodigo(
+                    pecas,
+                    totalPecas,
+                    ordensServico[i].codigoPeca
+                );
+                String descricao = "Peca nao encontrada";
+                double valorPecas = calcularValorPecasDaOrdem(ordensServico[i]);
+                double valorTotal = valorPecas + ordensServico[i].valorMaoDeObra;
+
+                if (posicaoPeca != -1) {
+                    descricao = pecas[posicaoPeca].descricao;
+                }
+
+                System.out.printf(
+                    "OS %d | Peca: %s | Pecas: R$ %.2f | Mao de obra: R$ %.2f | Total: R$ %.2f%n",
+                    ordensServico[i].numero,
+                    descricao,
+                    valorPecas,
+                    ordensServico[i].valorMaoDeObra,
+                    valorTotal
+                );
+
+                totalGeral = totalGeral + valorTotal;
+                encontrou = true;
+            }
+        }
+
+        if (!encontrou) {
+            System.out.println("Nenhuma OS encontrada para esta placa.");
+        } else {
+            System.out.printf("Total gasto pelo veiculo: R$ %.2f%n", totalGeral);
+        }
+    }
+
+    public static String prepararCampo(String texto) {
+        return texto.replace(";", ",");
     }
 }
