@@ -77,6 +77,7 @@ AutoCenterRota381/
 - [x] Salvar ordens de servico em `ordens_servico.csv`.
 - [x] Carregar todos os vetores ao iniciar o sistema.
 - [x] Salvar todos os vetores ao encerrar o sistema.
+- [x] Salvar imediatamente apos cada cadastro e apos cada OS aberta.
 - [x] Confirmar que os dados sobrevivem ao encerramento.
 
 ### Encontro 4 - Relatorios e diferencial
@@ -189,6 +190,9 @@ inicio do programa e gravados novamente ao encerrar.
 Foi revisado o carregamento das ordens de servico para que cada OS mantenha o
 preco unitario da peca no momento do lancamento. Assim, o relatorio de
 faturamento continua correto mesmo depois que o sistema fecha e abre de novo.
+Depois dos testes em laboratorio, o grupo tambem ajustou o salvamento para
+acontecer imediatamente apos cada cadastro e apos cada OS aberta, evitando perda
+de dados quando o programa e interrompido pelo botao de parar do VS Code.
 
 ### Encontro 4
 

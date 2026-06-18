@@ -111,11 +111,17 @@ public class App {
             opcao = Leitura.lerInteiro(leitor, "Escolha uma opcao: ");
 
             if (opcao == 1) {
+                int totalAnterior = totalMecanicos;
                 totalMecanicos = Cadastros.cadastrarMecanico(
                     leitor,
                     mecanicos,
                     totalMecanicos
                 );
+
+                if (totalMecanicos > totalAnterior) {
+                    Cadastros.salvarMecanicos(mecanicos, totalMecanicos);
+                    System.out.println("Mecanicos salvos em CSV.");
+                }
             } else if (opcao == 2) {
                 Cadastros.listarMecanicos(mecanicos, totalMecanicos);
             } else if (opcao != 0) {
@@ -141,11 +147,17 @@ public class App {
             opcao = Leitura.lerInteiro(leitor, "Escolha uma opcao: ");
 
             if (opcao == 1) {
+                int totalAnterior = totalVeiculos;
                 totalVeiculos = Cadastros.cadastrarVeiculo(
                     leitor,
                     veiculos,
                     totalVeiculos
                 );
+
+                if (totalVeiculos > totalAnterior) {
+                    Cadastros.salvarVeiculos(veiculos, totalVeiculos);
+                    System.out.println("Veiculos salvos em CSV.");
+                }
             } else if (opcao == 2) {
                 Cadastros.listarVeiculos(veiculos, totalVeiculos);
             } else if (opcao != 0) {
@@ -171,11 +183,17 @@ public class App {
             opcao = Leitura.lerInteiro(leitor, "Escolha uma opcao: ");
 
             if (opcao == 1) {
+                int totalAnterior = totalPecas;
                 totalPecas = Cadastros.cadastrarPeca(
                     leitor,
                     pecas,
                     totalPecas
                 );
+
+                if (totalPecas > totalAnterior) {
+                    Cadastros.salvarPecas(pecas, totalPecas);
+                    System.out.println("Pecas salvas em CSV.");
+                }
             } else if (opcao == 2) {
                 Cadastros.listarPecas(pecas, totalPecas);
             } else if (opcao != 0) {
@@ -207,6 +225,7 @@ public class App {
             opcao = Leitura.lerInteiro(leitor, "Escolha uma opcao: ");
 
             if (opcao == 1) {
+                int totalAnterior = totalOrdensServico;
                 totalOrdensServico = Cadastros.abrirOrdemServico(
                     leitor,
                     ordensServico,
@@ -218,6 +237,15 @@ public class App {
                     pecas,
                     totalPecas
                 );
+
+                if (totalOrdensServico > totalAnterior) {
+                    Cadastros.salvarOrdensServico(
+                        ordensServico,
+                        totalOrdensServico
+                    );
+                    Cadastros.salvarPecas(pecas, totalPecas);
+                    System.out.println("Ordem de servico e estoque salvos em CSV.");
+                }
             } else if (opcao == 2) {
                 Cadastros.listarOrdensServico(
                     ordensServico,
